@@ -8,17 +8,6 @@
 #   UrBackup is an easy to setup 
 #   Open Source client/server backup system.
 
-- name: "Check latest urbackup"
-  raw: curl https://hndl.urbackup.org/Client/latest/ | grep -Eo '"[^\"]+"' | grep urbackup-client.*tar.gz | grep -v 0 | tr -d '"'
-  register: latestversion
-
-- name: "Display version"
-  debug:
-    var: latestversion.stdout
-
-- name: " "
-
-
 - name: "Check if urbackup client already is installed"
   stat:
     path: /usr/local/bin/urbackupclientctl
@@ -52,9 +41,23 @@
     - libcrypto++-dev
     - libz-dev
 
-- name: "Download client source"
+#- name: "Download client source"
+#  unarchive:
+#    src: "{{ ubk_ubt_cli_src }}"
+#    dest: /tmp/
+#    remote_src: yes
+
+- name: "Check latest urbackup"
+  raw: curl https://hndl.urbackup.org/Client/latest/ | grep -Eo '"[^\"]+"' | grep urbackup-client.*tar.gz | grep -v 0 | tr -d '"'
+  register: latestversion
+      
+- name: "Display version"
+  debug:
+    var: latestversion.stdout
+
+- name: "Download latest version"
   unarchive:
-    src: "{{ ubk_ubt_cli_src }}"
+    src: https://hndl.urbackup.org/Client/latest/{{ latestversion.stdout }}
     dest: /tmp/
     remote_src: yes
 
@@ -63,7 +66,7 @@
 
 - name: "Transfer template to /tmp/urbackup-client"
   template:
-    src: ubt-1804-client/build.sh.j2
+    src: build.sh.j2
     dest: "/tmp/urbackup-client/build.sh"
     owner: root
     group: root
@@ -74,7 +77,7 @@
 
 - name: "Create systemservice"
   template:
-    src: ubt-1804-client/urbackupclientbackend.service.j2
+    src: urbackupclientbackend.service.j2
     dest: /lib/systemd/system/urbackupclientbackend.service
     owner: root
     group: root
@@ -95,7 +98,7 @@
 
 - name: "Set snapshot mechanism to {{ ubk_ubt_cli_snapshot_mech }}"
   template:
-    src: ubt-1804-client/snapshot.cfg.j2
+    src: snapshot.cfg.j2
     dest: /usr/local/etc/urbackup/snapshot.cfg
     owner: root
     group: root
@@ -111,13 +114,13 @@
     group: root
     mode: 0755
   with_items:
-    - { src: 'ubt-1804-client/filesystem_snapshot_common.j2', dest: '/usr/local/share/urbackup/filesystem_snapshot_common' }
-    - { src: 'ubt-1804-client/btrfs_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_create_filesystem_snapshot' }
-    - { src: 'ubt-1804-client/btrfs_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_remove_filesystem_snapshot' }
-    - { src: 'ubt-1804-client/dattobd_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_create_filesystem_snapshot' }
-    - { src: 'ubt-1804-client/dattobd_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_remove_filesystem_snapshot' }
-    - { src: 'ubt-1804-client/lvm_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_create_filesystem_snapshot' } 
-    - { src: 'ubt-1804-client/lvm_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_remove_filesystem_snapshot' }
+    - { src: 'filesystem_snapshot_common.j2', dest: '/usr/local/share/urbackup/filesystem_snapshot_common' }
+    - { src: 'btrfs_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_create_filesystem_snapshot' }
+    - { src: 'btrfs_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_remove_filesystem_snapshot' }
+    - { src: 'dattobd_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_create_filesystem_snapshot' }
+    - { src: 'dattobd_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_remove_filesystem_snapshot' }
+    - { src: 'lvm_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_create_filesystem_snapshot' } 
+    - { src: 'lvm_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_remove_filesystem_snapshot' }
 
 - name: "Remove all backupdirectories from backuplist when urbackupclient is allready installed"
   command: "/usr/local/bin/urbackupclientctl remove-backupdir -d {{ item.src }}"
