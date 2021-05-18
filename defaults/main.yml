@@ -25,13 +25,10 @@
 
 urbackupclient_state      : 'Enabled'
 urbackupclient_server_url : ''
-
-
-ubk_ubt_cli_state          : 'disabled'
-ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.4.10/urbackup-client-2.4.10.tar.gz'
-ubk_ubt_cli_snapshot_mech  : 'nosnapshot'
-ubk_ubt_cli_backupdirs     : 
+urbackupclient_snapshot_mech : 'nosnapshot'
+urbackupclient_backupdirs :
   - { snapshot: 'false', src: '/opt' }
   - { snapshot: 'false', src: '/etc' }
   - { snapshot: 'false', src: '/home' }
-  - { snapshot: 'false', src: '/var/www' } 
+  - { snapshot: 'false', src: '/var/www' }
+
