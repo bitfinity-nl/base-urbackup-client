@@ -118,32 +118,32 @@
 
 - name: "Remove all backupdirectories from backuplist when urbackupclient is allready installed"
   command: "/usr/local/bin/urbackupclientctl remove-backupdir -d {{ item.src }}"
-  with_items: "{{ ubk_ubt_cli_backupdirs }}"
+  with_items: "{{ urbackupclient_backupdirs }}"
   ignore_errors: yes
   when:
     - urbackup_isinstalled.stat.exists == true
 
 - name: "Add directories to backuplist with snapshot mechanism btrfs"
   command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
-  with_items: "{{ ubk_ubt_cli_backupdirs }}"
+  with_items: "{{ urbackupclient_backupdirs }}"
   when: 
     - urbackupclient_snapshot_mech == 'btrfs' and item.snapshot == 'true'
 
 - name: "Add directories to backuplist with snapshot mechanism dattodb"
   command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
-  with_items: "{{ ubk_ubt_cli_backupdirs }}"
+  with_items: "{{ urbackupclient_backupdirs }}"
   when: 
     - urbackupclient_snapshot_mech == 'dattodb' and item.snapshot == 'true'
 
 - name: "Add directories to backuplist with snapshot mechanism lvm"
   command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
-  with_items: "{{ ubk_ubt_cli_backupdirs }}"
+  with_items: "{{ urbackupclient_backupdirs }}"
   when: 
     - urbackupclient_snapshot_mech == 'lvm' and item.snapshot == 'true'
 
 - name: "Add directories to backuplist without snapshot"
   command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
-  with_items: "{{ ubk_ubt_cli_backupdirs }}"
+  with_items: "{{ urbackupclient_backupdirs }}"
   when: 
     - urbackupclient_snapshot_mech == 'nosnapshot' and item.snapshot == 'false' or
       urbackupclient_snapshot_mech == 'btrfs' and item.snapshot == 'false' or
