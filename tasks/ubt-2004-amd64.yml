@@ -8,6 +8,17 @@
 #   UrBackup is an easy to setup 
 #   Open Source client/server backup system.
 
+- name: "Check latest urbackup"
+  raw: curl https://hndl.urbackup.org/Client/latest/ | grep -Eo '"[^\"]+"' | grep urbackup-client.*tar.gz | grep -v 0 | tr -d '"'
+  register: latestversion
+
+- name: "Display version"
+  debug:
+    var: latestversion.stdout
+
+- name: " "
+
+
 - name: "Check if urbackup client already is installed"
   stat:
     path: /usr/local/bin/urbackupclientctl
