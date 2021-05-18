@@ -21,7 +21,12 @@
 #
 # Note:
 #   - uninstall before adding new paths: /usr/local/sbin/uninstall_urbackupclient
-#     
+#
+
+urbackupclient_state      : 'Enabled'
+urbackupclient_server_url : ''
+
+
 ubk_ubt_cli_state          : 'disabled'
 ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.4.10/urbackup-client-2.4.10.tar.gz'
 ubk_ubt_cli_snapshot_mech  : 'nosnapshot'
