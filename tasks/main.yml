@@ -1,0 +1,7 @@
+
+- name: "Type:Client, For OS: Ubuntu 20.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-2004-amd64.yml
+  when:
+    - ansible_distribution_version == '20.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_cli_state == 'enabled'
