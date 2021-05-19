@@ -39,7 +39,7 @@
     - g++
     # For Ubuntu 18.04 or lower
     #- libwxgtk3.0-dev
-    - libgtk3.0-gtk3-dev
+    - libwxgtk3.0-gtk3-dev
     - libcrypto++-dev
     - libz-dev
 
