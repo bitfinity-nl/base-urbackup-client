@@ -90,7 +90,7 @@
   when:
     - urbackupclient_snapshot_mech == "nosnapshot"
 
-- name: "Set snapshot mechanism to {{ ubk_ubt_cli_snapshot_mech }}"
+- name: "Set snapshot mechanism to {{ urbackupclient_snapshot_mech }}"
   template:
     src: snapshot.cfg.j2
     dest: /usr/local/etc/urbackup/snapshot.cfg
